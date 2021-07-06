@@ -1,20 +1,22 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using DataAccessLibrary;
+﻿using DataAccessLibrary;
 using DataAccessLibrary.Models;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace MongoDBUI
+namespace CosmosDBUI
 {
     class Program
     {
-        private static MongoDBDataAccess db;
-        private static readonly string tableName = "Contacts";
+        private static CosmosDBDataAccess db;
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            db = new MongoDBDataAccess("MongoContactsDB", GetConnectionString());
+            var c = GetCosmosInfo();
+
+            db = new CosmosDBDataAccess(c.endpointUrl, c.primaryKey, c.databaseName, c.containerName);
 
             ContactModel user = new ContactModel
             {
@@ -28,56 +30,53 @@ namespace MongoDBUI
             user.PhoneNumbers.Add(new PhoneNumberModel { PhoneNumber = "+375242312428" });
             user.PhoneNumbers.Add(new PhoneNumberModel { PhoneNumber = "+375341234796" });
 
-            //CreateContact(user); d16d7301-b714-4778-9688-8434d2c379d4
+            await CreateContact(user);
 
-            //GetAllContacts();
+            await GetAllContacts();
 
-            //GetContactById("d16d7301-b714-4778-9688-8434d2c379d4");
+            await GetContactById("");
 
-            //UpdateContactsFirstName("Vadik", "d16d7301-b714-4778-9688-8434d2c379d4");
+            await UpdateContactsFirstName("", "");
 
-            //RemovePhoneNumberFromUser("+375341234796", "d16d7301-b714-4778-9688-8434d2c379d4");
+            await RemovePhoneNumberFromUser("", "");
 
-            RemoveUser("976f5ae6-60b5-4cf8-92f1-2f1883bc6ede"); 
+            await RemoveUser("", "");
 
-            Console.WriteLine("Mongo DB");
+            Console.WriteLine("Cosmos DB");
             Console.ReadLine();
         }
 
-        private static void CreateContact(ContactModel contact)
+        private static async Task CreateContact(ContactModel contact)
         {
-            db.UpsertRecord(tableName, contact.Id, contact);
+            await db.UpsertRecordAsync(contact);
         }
 
-        private static void UpdateContactsFirstName(string firstName, string id)
+        private static async Task UpdateContactsFirstName(string firstName, string id)
         {
-            Guid guid = new Guid(id);
-            var contact = db.LoadRecordById<ContactModel>(tableName, guid);
+            var contact = await db.LoadRecordByIdAsync<ContactModel>(id);
 
             contact.FirstName = firstName;
 
-            db.UpsertRecord(tableName, contact.Id, contact);
+            await db.UpsertRecordAsync(contact);
         }
 
-        private static void RemovePhoneNumberFromUser(string phoneNumber, string id)
+        private static async Task RemovePhoneNumberFromUser(string phoneNumber, string id)
         {
-            Guid guid = new Guid(id);
-            var contact = db.LoadRecordById<ContactModel>(tableName, guid);
+            var contact = await db.LoadRecordByIdAsync<ContactModel>(id);
 
             contact.PhoneNumbers = contact.PhoneNumbers.Where(x => x.PhoneNumber != phoneNumber).ToList();
 
-            db.UpsertRecord(tableName, contact.Id, contact);
-        }
-        
-        private static void RemoveUser(string id)
-        {
-            Guid guid = new Guid(id);
-            db.DeleteRecord<ContactModel>(tableName, guid);
+            await db.UpsertRecordAsync(contact);
         }
 
-        private static void GetAllContacts()
+        private static async Task RemoveUser(string id, string partitionKey)
         {
-            var contacts = db.LoadRecords<ContactModel>(tableName);
+            await db.DeleteRecordAsync<ContactModel>(id, partitionKey);
+        }
+
+        private static async Task GetAllContacts()
+        {
+            var contacts = await db.LoadRecordsAsync<ContactModel>();
 
             foreach (var contact in contacts)
             {
@@ -97,10 +96,9 @@ namespace MongoDBUI
             }
         }
 
-        private static void GetContactById(string id)
+        private static async Task GetContactById(string id)
         {
-            Guid guid = new Guid(id);
-            var contact = db.LoadRecordById<ContactModel>(tableName, guid);
+            var contact = await db.LoadRecordByIdAsync<ContactModel>(id);
 
             Console.WriteLine($"{contact.Id}: {contact.FirstName} {contact.LastName}");
 
@@ -115,9 +113,9 @@ namespace MongoDBUI
             }
         }
 
-        private static string GetConnectionString(string nameConnection = "Default")
+        private static (string endpointUrl, string primaryKey, string databaseName, string containerName) GetCosmosInfo()
         {
-            string output = string.Empty;
+            (string endpointUrl, string primaryKey, string databaseName, string containerName) output;
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -125,7 +123,10 @@ namespace MongoDBUI
 
             var config = builder.Build();
 
-            output = config.GetConnectionString(nameConnection);
+            output.endpointUrl = config.GetValue<string>("CosmosDB:EndpointUrl");
+            output.primaryKey = config.GetValue<string>("CosmosDB:PrimaryKey");
+            output.databaseName = config.GetValue<string>("CosmosDB:DatabaseName");
+            output.containerName = config.GetValue<string>("CosmosDB:ContainerName");
 
             return output;
         }

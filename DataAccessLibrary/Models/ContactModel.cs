@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +8,7 @@ namespace DataAccessLibrary.Models
     public class ContactModel
     {
         [BsonId]
+        [JsonProperty(PropertyName = "id")]
         public Guid Id { get; set; } = Guid.NewGuid();
         public string FirstName { get; set; }
         public string LastName { get; set; }

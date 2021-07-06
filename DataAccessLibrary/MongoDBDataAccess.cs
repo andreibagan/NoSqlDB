@@ -39,7 +39,7 @@ namespace DataAccessLibrary
         {
             var collection = db.GetCollection<T>(table);
 
-            var result = collection.ReplaceOne(new BsonDocument("_id", id), record, new UpdateOptions { IsUpsert = true });
+            collection.ReplaceOne(new BsonDocument("_id", id), record, new UpdateOptions { IsUpsert = true });
         }
 
         public void DeleteRecord<T>(string table, Guid id)
