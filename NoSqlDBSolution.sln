@@ -7,7 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MongoDBUI", "MongoDBUI\Mong
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLibrary", "DataAccessLibrary\DataAccessLibrary.csproj", "{555E0CB2-4434-4071-961A-5CC4EB889687}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CosmosDBUI", "CosmosDBUI\CosmosDBUI.csproj", "{552788E1-89E7-4161-947B-28D9272F582E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CosmosDBUI", "CosmosDBUI\CosmosDBUI.csproj", "{552788E1-89E7-4161-947B-28D9272F582E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactAPI", "ContactAPI\ContactAPI.csproj", "{CE3E95E7-2CBD-4782-9F68-43CAFB469BD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactUI", "ContactUI\ContactUI.csproj", "{72013AD6-00FA-456F-BB6B-638B9F322B33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{552788E1-89E7-4161-947B-28D9272F582E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{552788E1-89E7-4161-947B-28D9272F582E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{552788E1-89E7-4161-947B-28D9272F582E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE3E95E7-2CBD-4782-9F68-43CAFB469BD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE3E95E7-2CBD-4782-9F68-43CAFB469BD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE3E95E7-2CBD-4782-9F68-43CAFB469BD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE3E95E7-2CBD-4782-9F68-43CAFB469BD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72013AD6-00FA-456F-BB6B-638B9F322B33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72013AD6-00FA-456F-BB6B-638B9F322B33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72013AD6-00FA-456F-BB6B-638B9F322B33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72013AD6-00FA-456F-BB6B-638B9F322B33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
